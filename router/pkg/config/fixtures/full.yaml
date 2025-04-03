@@ -45,6 +45,14 @@ mcp:
   storage:
     provider_id: mcp
 
+watch_config:
+  enabled: true
+  interval: "10s"
+
+  startup_delay:
+    enabled: true
+    maximum: "10s"
+
 # Cross-Origin Resource Sharing (CORS)
 cors:
   allow_origins: ["*"]
