@@ -2420,6 +2420,33 @@
         }
       }
     },
+    "extensions": {
+      "type": "object",
+      "description": "Manage what extensions are reported in the response.",
+      "additionalProperties": false,
+      "properties": {
+        "skip_authorizer": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip adding the Authorizer extension to the response."
+        },
+        "skip_rate_limit": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip adding the Rate Limit extension to the response."
+        },
+        "skip_tracing": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip adding the Tracing extension to the response."
+        },
+        "skip_query_plan": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip adding the Query Plan extension to the response."
+        }
+      }
+    },
     "engine": {
       "type": "object",
       "description": "The configuration for the engine. The engine is used to execute the GraphQL queries, mutations and subscriptions. Only modify this if you know what you are doing.",

@@ -69,6 +69,7 @@ type PreHandlerOptions struct {
 	DisableVariablesRemapping   bool
 	ExprManager                 *expr.Manager
 	OmitBatchExtensions         bool
+	Extensions                  *config.ExtensionsConfig
 }
 
 type PreHandler struct {
@@ -102,6 +103,7 @@ type PreHandler struct {
 	disableVariablesRemapping   bool
 	exprManager                 *expr.Manager
 	omitBatchExtensions         bool
+	extensions                  *config.ExtensionsConfig
 }
 
 type httpOperation struct {
@@ -148,6 +150,7 @@ func NewPreHandler(opts *PreHandlerOptions) *PreHandler {
 		disableVariablesRemapping: opts.DisableVariablesRemapping,
 		exprManager:               opts.ExprManager,
 		omitBatchExtensions:       opts.OmitBatchExtensions,
+		extensions:                opts.Extensions,
 	}
 }
 
@@ -1061,6 +1064,8 @@ func (h *PreHandler) parseRequestOptions(r *http.Request, clientInfo *ClientInfo
 	if err != nil {
 		return ex, tr, err
 	}
+	ex.SkipPrintQueryPlanInExtension = h.extensions.SkipQueryPlan
+	tr.SkipPrintExtension = h.extensions.SkipTracing
 	if h.alwaysIncludeQueryPlan {
 		ex.IncludeQueryPlanInResponse = true
 	}

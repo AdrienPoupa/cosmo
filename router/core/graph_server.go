@@ -1093,6 +1093,7 @@ func (s *graphServer) buildGraphMux(ctx context.Context,
 		Authorizer:                                  NewCosmoAuthorizer(authorizerOptions),
 		SubgraphErrorPropagation:                    s.subgraphErrorPropagation,
 		EngineLoaderHooks:                           NewEngineRequestHooks(gm.metricStore, subgraphAccessLogger, s.tracerProvider),
+		ExtensionConfig:                             s.extensionsConfig,
 	}
 
 	if s.redisClient != nil {
@@ -1166,6 +1167,7 @@ func (s *graphServer) buildGraphMux(ctx context.Context,
 		DisableVariablesRemapping:   s.engineExecutionConfiguration.DisableVariablesRemapping,
 		ExprManager:                 exprManager,
 		OmitBatchExtensions:         s.batchingConfig.OmitExtensions,
+		Extensions:                  &s.extensionsConfig,
 	})
 
 	if s.webSocketConfiguration != nil && s.webSocketConfiguration.Enabled {

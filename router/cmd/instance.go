@@ -81,6 +81,7 @@ func NewRouter(ctx context.Context, params Params, additionalOptions ...core.Opt
 		core.WithPlaygroundPath(cfg.PlaygroundPath),
 		core.WithHealthCheckPath(cfg.HealthCheckPath),
 		core.WithLivenessCheckPath(cfg.LivenessCheckPath),
+		core.WithExtensionsConfig(cfg.Extensions),
 		core.WithGraphQLMetrics(&core.GraphQLMetricsConfig{
 			Enabled:           cfg.GraphqlMetrics.Enabled,
 			CollectorEndpoint: cfg.GraphqlMetrics.CollectorEndpoint,
@@ -88,6 +89,12 @@ func NewRouter(ctx context.Context, params Params, additionalOptions ...core.Opt
 		core.WithAnonymization(&core.IPAnonymizationConfig{
 			Enabled: cfg.Compliance.AnonymizeIP.Enabled,
 			Method:  core.IPAnonymizationMethod(cfg.Compliance.AnonymizeIP.Method),
+		}),
+		core.WithBatching(&core.BatchingConfig{
+			Enabled:               cfg.Batching.Enabled,
+			MaxConcurrentRoutines: cfg.Batching.MaxConcurrency,
+			MaxEntriesPerBatch:    cfg.Batching.MaxEntriesPerBatch,
+			OmitExtensions:        cfg.Batching.OmitExtensions,
 		}),
 		core.WithBatching(&core.BatchingConfig{
 			Enabled:               cfg.Batching.Enabled,

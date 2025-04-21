@@ -962,7 +962,16 @@ type Config struct {
 	AutomaticPersistedQueries      AutomaticPersistedQueriesConfig `yaml:"automatic_persisted_queries"`
 	ApolloCompatibilityFlags       ApolloCompatibilityFlags        `yaml:"apollo_compatibility_flags"`
 	ApolloRouterCompatibilityFlags ApolloRouterCompatibilityFlags  `yaml:"apollo_router_compatibility_flags"`
-	ClientHeader                   ClientHeader                    `yaml:"client_header"`
+
+	Extensions   ExtensionsConfig `yaml:"extensions"`
+	ClientHeader ClientHeader     `yaml:"client_header"`
+}
+
+type ExtensionsConfig struct {
+	SkipAuthorizer bool `yaml:"skip_authorizer" envDefault:"false" env:"EXTENSIONS_ENABLE_AUTHORIZER"`
+	SkipRateLimit  bool `yaml:"skip_rate_limit" envDefault:"false" env:"EXTENSIONS_ENABLE_RATE_LIMIT"`
+	SkipTracing    bool `yaml:"skip_tracing" envDefault:"false" env:"EXTENSIONS_ENABLE_TRACING"`
+	SkipQueryPlan  bool `yaml:"skip_query_plan" envDefault:"false" env:"EXTENSIONS_ENABLE_QUERY_PLAN"`
 }
 
 type PlaygroundConfig struct {

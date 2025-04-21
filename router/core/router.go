@@ -247,6 +247,7 @@ type (
 		multipartHeartbeatInterval time.Duration
 		hostName                   string
 		mcp                        config.MCPConfiguration
+		extensionsConfig           config.ExtensionsConfig
 	}
 	// Option defines the method to customize server.
 	Option func(svr *Router)
@@ -1569,6 +1570,13 @@ func WithPlaygroundPath(p string) Option {
 func WithPlaygroundConfig(c config.PlaygroundConfig) Option {
 	return func(r *Router) {
 		r.playgroundConfig = c
+	}
+}
+
+// WithPlaygroundPath sets the path where the GraphQL Playground is served.
+func WithExtensionsConfig(c config.ExtensionsConfig) Option {
+	return func(r *Router) {
+		r.extensionsConfig = c
 	}
 }
 

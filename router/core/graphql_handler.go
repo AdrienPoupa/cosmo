@@ -78,6 +78,7 @@ type HandlerOptions struct {
 	SubgraphErrorPropagation                    config.SubgraphErrorPropagationConfiguration
 	EngineLoaderHooks                           resolve.LoaderHooks
 	ApolloSubscriptionMultipartPrintBoundary    bool
+	ExtensionConfig                             config.ExtensionsConfig
 }
 
 func NewGraphQLHandler(opts HandlerOptions) *GraphQLHandler {
@@ -99,6 +100,7 @@ func NewGraphQLHandler(opts HandlerOptions) *GraphQLHandler {
 		subgraphErrorPropagation:                 opts.SubgraphErrorPropagation,
 		engineLoaderHooks:                        opts.EngineLoaderHooks,
 		apolloSubscriptionMultipartPrintBoundary: opts.ApolloSubscriptionMultipartPrintBoundary,
+		extensionConfig:                          opts.ExtensionConfig,
 	}
 	return graphQLHandler
 }
@@ -131,6 +133,7 @@ type GraphQLHandler struct {
 	enableResponseHeaderPropagation             bool
 
 	apolloSubscriptionMultipartPrintBoundary bool
+	extensionConfig                          config.ExtensionsConfig
 }
 
 func (h *GraphQLHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -157,8 +160,10 @@ func (h *GraphQLHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx = ctx.WithContext(executionContext)
+
 	if h.authorizer != nil {
 		ctx = WithAuthorizationExtension(ctx)
+		ctx.SetAuthorizerOptions(resolve.AuthorizerOptions{SkipPrintExtension: h.extensionConfig.SkipAuthorizer})
 		ctx.SetAuthorizer(h.authorizer)
 	}
 	if h.engineLoaderHooks != nil {
@@ -260,6 +265,7 @@ func (h *GraphQLHandler) configureRateLimiting(ctx *resolve.Context) *resolve.Co
 			Enabled: h.rateLimitConfig.ErrorExtensionCode.Enabled,
 			Code:    h.rateLimitConfig.ErrorExtensionCode.Code,
 		},
+		SkipPrintExtension: h.extensionConfig.SkipRateLimit,
 	}
 	return WithRateLimiterStats(ctx)
 }

@@ -755,6 +755,12 @@
       "ObjectPrefix": "cosmo_apq"
     }
   },
+  "Extensions": {
+    "SkipAuthorizer": false,
+    "SkipRateLimit": false,
+    "SkipTracing": false,
+    "SkipQueryPlan": false
+  },
   "ApolloCompatibilityFlags": {
     "EnableAll": false,
     "ValueCompletion": {
