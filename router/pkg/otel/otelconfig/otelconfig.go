@@ -22,8 +22,7 @@ const (
 // report OTEL data (e.g. metrics, traces, etc...)
 func DefaultEndpoint() string {
 	// Allow overriding this during development
-	getenv := os.Getenv("DEFAULT_TELEMETRY_ENDPOINT")
-	if ep := getenv; ep != "" {
+	if ep := os.Getenv("DEFAULT_TELEMETRY_ENDPOINT"); ep != "" {
 		return ep
 	}
 	return CloudDefaultTelemetryEndpoint

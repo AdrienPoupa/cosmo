@@ -31,7 +31,7 @@ const (
 	unitBytes        = "bytes"
 	unitMilliseconds = "ms"
 
-	RouterConfigVersion = "router.config.version" // Number of requests in flight
+	RouterConfigVersion = "router.config.version"
 )
 
 var (
@@ -73,7 +73,7 @@ var (
 		otelmetric.WithDescription(OperationPlanningTimeHistogramDescription),
 	}
 
-	RouterConfigDescription = "Current version of the given router"
+	RouterConfigDescription = "Current running version of the router configuration"
 	RouterConfigOptions     = []otelmetric.Int64GaugeOption{
 		otelmetric.WithDescription(RouterConfigDescription),
 	}
