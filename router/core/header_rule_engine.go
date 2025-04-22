@@ -292,21 +292,19 @@ func (h *HeaderPropagation) OnOriginRequest(request *http.Request, ctx RequestCo
 }
 
 func (h *HeaderPropagation) OnOriginResponse(originReq *http.Request, originResp *http.Response, ctx RequestContext) *http.Response {
-	// In the case of an error response, it is possible that the response is nil
-	if originResp == nil {
-		propagation := getResponseHeaderPropagation(originReq.Context())
-		if propagation == nil {
-			return nil
-		}
-
-		propagation.header.Set(cacheControlKey, noCache)
-
+	if originResp == nil && originReq == nil {
 		return nil
 	}
 
-	propagation := getResponseHeaderPropagation(originResp.Request.Context())
+	propagation := getResponseHeaderPropagation(originReq.Context())
 	if propagation == nil {
 		return originResp
+	}
+
+	// In the case of an error response, it is possible that the response is nil
+	if originResp == nil {
+		propagation.header.Set(cacheControlKey, noCache)
+		return nil
 	}
 
 	for _, rule := range h.rules.All.Response {

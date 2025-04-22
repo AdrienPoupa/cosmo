@@ -262,7 +262,7 @@ func TestPropagateHeaderRule(t *testing.T) {
 		assert.Nil(t, err)
 
 		rr := httptest.NewRecorder()
-		resp := ht.OnOriginResponse(nil, &requestContext{
+		resp := ht.OnOriginResponse(nil, nil, &requestContext{
 			logger:           zap.NewNop(),
 			responseWriter:   rr,
 			operation:        &operationContext{},
