@@ -99,7 +99,8 @@ var (
 		switch kind {
 		case sdkmetric.InstrumentKindCounter,
 			sdkmetric.InstrumentKindUpDownCounter,
-			sdkmetric.InstrumentKindHistogram:
+			sdkmetric.InstrumentKindHistogram,
+			sdkmetric.InstrumentKindGauge:
 			return metricdata.DeltaTemporality
 		case
 			sdkmetric.InstrumentKindObservableGauge,

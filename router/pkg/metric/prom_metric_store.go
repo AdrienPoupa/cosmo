@@ -60,6 +60,12 @@ func (h *PromMetricStore) MeasureRequestCount(ctx context.Context, opts ...otelm
 	}
 }
 
+func (h *PromMetricStore) SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue) {
+	if c, ok := h.measurements.gauges[RouterConfigVersion]; ok {
+		c.Record(ctx, 1, otelmetric.WithAttributes(configVersion))
+	}
+}
+
 func (h *PromMetricStore) MeasureRequestSize(ctx context.Context, contentLength int64, opts ...otelmetric.AddOption) {
 	if c, ok := h.measurements.counters[RequestContentLengthCounter]; ok {
 		c.Add(ctx, contentLength, opts...)

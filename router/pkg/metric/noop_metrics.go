@@ -18,6 +18,10 @@ func (n NoopMetrics) MeasureInFlight(ctx context.Context, sliceAttr []attribute.
 	}
 }
 
+func (n NoopMetrics) SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue) {
+
+}
+
 func (n NoopMetrics) MeasureRequestCount(ctx context.Context, sliceAttr []attribute.KeyValue, opt otelmetric.AddOption) {
 
 }

@@ -30,6 +30,8 @@ const (
 
 	unitBytes        = "bytes"
 	unitMilliseconds = "ms"
+
+	RouterConfigVersion = "router.config.version" // Number of requests in flight
 )
 
 var (
@@ -70,6 +72,11 @@ var (
 		otelmetric.WithUnit("ms"),
 		otelmetric.WithDescription(OperationPlanningTimeHistogramDescription),
 	}
+
+	RouterConfigDescription = "Current version of the given router"
+	RouterConfigOptions     = []otelmetric.Int64GaugeOption{
+		otelmetric.WithDescription(RouterConfigDescription),
+	}
 )
 
 type (
@@ -105,6 +112,7 @@ type (
 		MeasureLatency(ctx context.Context, latency float64, opts ...otelmetric.RecordOption)
 		MeasureRequestError(ctx context.Context, opts ...otelmetric.AddOption)
 		MeasureOperationPlanningTime(ctx context.Context, planningTime float64, opts ...otelmetric.RecordOption)
+		SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue)
 		Flush(ctx context.Context) error
 	}
 
@@ -118,6 +126,7 @@ type (
 		MeasureLatency(ctx context.Context, latency time.Duration, sliceAttr []attribute.KeyValue, opt otelmetric.RecordOption)
 		MeasureRequestError(ctx context.Context, sliceAttr []attribute.KeyValue, opt otelmetric.AddOption)
 		MeasureOperationPlanningTime(ctx context.Context, planningTime time.Duration, sliceAttr []attribute.KeyValue, opt otelmetric.RecordOption)
+		SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue)
 		Flush(ctx context.Context) error
 		Shutdown(ctx context.Context) error
 	}
@@ -199,6 +208,10 @@ func (h *Metrics) MeasureInFlight(ctx context.Context, sliceAttr []attribute.Key
 			h()
 		}
 	}
+}
+
+func (h *Metrics) SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue) {
+	h.promRequestMetrics.SetConfigVersionCount(ctx, configVersion)
 }
 
 func (h *Metrics) MeasureRequestCount(ctx context.Context, sliceAttr []attribute.KeyValue, opt otelmetric.AddOption) {

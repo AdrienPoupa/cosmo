@@ -10,15 +10,16 @@ type Measurements struct {
 	counters       map[string]otelmetric.Int64Counter
 	histograms     map[string]otelmetric.Float64Histogram
 	upDownCounters map[string]otelmetric.Int64UpDownCounter
+	gauges         map[string]otelmetric.Int64Gauge
 }
 
 // createMeasures creates the measures. Used to create measures for both Prometheus and OTLP metric stores.
 func createMeasures(meter otelmetric.Meter) (*Measurements, error) {
-
 	h := &Measurements{
 		counters:       map[string]otelmetric.Int64Counter{},
 		histograms:     map[string]otelmetric.Float64Histogram{},
 		upDownCounters: map[string]otelmetric.Int64UpDownCounter{},
+		gauges:         map[string]otelmetric.Int64Gauge{},
 	}
 
 	requestCounter, err := meter.Int64Counter(
@@ -38,7 +39,6 @@ func createMeasures(meter otelmetric.Meter) (*Measurements, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request error counter: %w", err)
 	}
-
 	h.counters[RequestError] = requestError
 
 	serverLatencyMeasure, err := meter.Float64Histogram(
@@ -80,6 +80,15 @@ func createMeasures(meter otelmetric.Meter) (*Measurements, error) {
 	}
 
 	h.upDownCounters[InFlightRequestsUpDownCounter] = inFlightRequestsGauge
+
+	routerConfigVersion, err := meter.Int64Gauge(
+		RouterConfigVersion,
+		RouterConfigOptions...,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request error counter: %w", err)
+	}
+	h.gauges[RouterConfigVersion] = routerConfigVersion
 
 	operationPlanningTime, err := meter.Float64Histogram(
 		OperationPlanningTime,

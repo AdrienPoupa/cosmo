@@ -2,6 +2,7 @@ package metric
 
 import (
 	"context"
+	"go.opentelemetry.io/otel/attribute"
 	otelmetric "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.uber.org/zap"
@@ -58,6 +59,12 @@ func (h *OtlpMetricStore) MeasureInFlight(ctx context.Context, opts ...otelmetri
 func (h *OtlpMetricStore) MeasureRequestCount(ctx context.Context, opts ...otelmetric.AddOption) {
 	if c, ok := h.measurements.counters[RequestCounter]; ok {
 		c.Add(ctx, 1, opts...)
+	}
+}
+
+func (h *OtlpMetricStore) SetConfigVersionCount(ctx context.Context, configVersion attribute.KeyValue) {
+	if c, ok := h.measurements.gauges[RouterConfigVersion]; ok {
+		c.Record(ctx, 1, otelmetric.WithAttributes(configVersion))
 	}
 }
 

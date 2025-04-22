@@ -697,6 +697,8 @@ func (s *graphServer) buildGraphMux(ctx context.Context,
 		}
 
 		gm.metricStore = m
+
+		m.SetConfigVersionCount(ctx, otel.WgRouterConfigVersion.String(routerConfigVersion))
 	}
 
 	subgraphs, err := configureSubgraphOverwrites(
