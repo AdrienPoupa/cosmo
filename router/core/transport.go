@@ -37,7 +37,7 @@ import (
 
 type (
 	TransportPreHandler  func(req *http.Request, ctx RequestContext) (*http.Request, *http.Response)
-	TransportPostHandler func(resp *http.Response, ctx RequestContext) *http.Response
+	TransportPostHandler func(req *http.Request, resp *http.Response, ctx RequestContext) *http.Response
 )
 
 type CustomTransport struct {
@@ -168,7 +168,7 @@ func (ct *CustomTransport) RoundTrip(req *http.Request) (resp *http.Response, er
 
 	if ct.postHandlers != nil {
 		for _, postHandler := range ct.postHandlers {
-			newResp := postHandler(resp, moduleContext)
+			newResp := postHandler(req, resp, moduleContext)
 			// Abort with the first handler that returns a non-nil response
 			if newResp != nil {
 				return newResp, nil

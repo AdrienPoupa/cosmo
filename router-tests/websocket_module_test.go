@@ -36,7 +36,7 @@ func (m MyCustomWebsocketModule) Module() core.ModuleInfo {
 	}
 }
 
-func (m MyCustomWebsocketModule) OnOriginResponse(resp *http.Response, ctx core.RequestContext) *http.Response {
+func (m MyCustomWebsocketModule) OnOriginResponse(req *http.Request, resp *http.Response, ctx core.RequestContext) *http.Response {
 	*m.postHandlerCalled = true
 
 	require.NotNil(m.t, resp)

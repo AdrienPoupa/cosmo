@@ -291,31 +291,38 @@ func (h *HeaderPropagation) OnOriginRequest(request *http.Request, ctx RequestCo
 	return request, nil
 }
 
-func (h *HeaderPropagation) OnOriginResponse(resp *http.Response, ctx RequestContext) *http.Response {
+func (h *HeaderPropagation) OnOriginResponse(originReq *http.Request, originResp *http.Response, ctx RequestContext) *http.Response {
 	// In the case of an error response, it is possible that the response is nil
-	if resp == nil {
+	if originResp == nil {
+		propagation := getResponseHeaderPropagation(originReq.Context())
+		if propagation == nil {
+			return nil
+		}
+
+		propagation.header.Set(cacheControlKey, noCache)
+
 		return nil
 	}
 
-	propagation := getResponseHeaderPropagation(resp.Request.Context())
+	propagation := getResponseHeaderPropagation(originResp.Request.Context())
 	if propagation == nil {
-		return resp
+		return originResp
 	}
 
 	for _, rule := range h.rules.All.Response {
-		h.applyResponseRule(propagation, resp, rule)
+		h.applyResponseRule(propagation, originResp, rule)
 	}
 
-	subgraph := ctx.ActiveSubgraph(resp.Request)
+	subgraph := ctx.ActiveSubgraph(originResp.Request)
 	if subgraph != nil {
 		if subgraphRules, ok := h.rules.Subgraphs[subgraph.Name]; ok {
 			for _, rule := range subgraphRules.Response {
-				h.applyResponseRule(propagation, resp, rule)
+				h.applyResponseRule(propagation, originResp, rule)
 			}
 		}
 	}
 
-	return resp
+	return originResp
 }
 
 func (h *HeaderPropagation) applyResponseRule(propagation *responseHeaderPropagation, res *http.Response, rule *config.ResponseHeaderRule) {

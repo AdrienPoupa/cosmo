@@ -3,11 +3,12 @@ package core
 import (
 	stdContext "context"
 	"fmt"
-	"go.opentelemetry.io/otel/propagation"
 	"math"
 	"net/http"
 	"sort"
 	"sync"
+
+	"go.opentelemetry.io/otel/propagation"
 
 	"github.com/pkg/errors"
 	"github.com/wundergraph/graphql-go-tools/v2/pkg/graphqlerrors"
@@ -131,7 +132,7 @@ type EnginePreOriginHandler interface {
 type EnginePostOriginHandler interface {
 	// OnOriginResponse is called after the request is sent to the origin.
 	// Might be called multiple times if there are multiple origins
-	OnOriginResponse(resp *http.Response, ctx RequestContext) *http.Response
+	OnOriginResponse(originReq *http.Request, originResp *http.Response, ctx RequestContext) *http.Response
 }
 
 // TracePropagationProvider is an interface that allows you to provide custom trace propagators.

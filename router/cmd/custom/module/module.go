@@ -44,7 +44,7 @@ func (m *MyModule) Cleanup() error {
 	return nil
 }
 
-func (m *MyModule) OnOriginResponse(response *http.Response, ctx core.RequestContext) *http.Response {
+func (m *MyModule) OnOriginResponse(request *http.Request, response *http.Response, ctx core.RequestContext) *http.Response {
 	// Return a new response or nil if you want to pass it to the next handler
 	// If you want to modify the response, return a new response
 
